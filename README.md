@@ -10,22 +10,40 @@ To write a python program to perform stop and wait protocol
 6. Stop the Program
 ## PROGRAM
 ```
-import socket
-s=socket.socket()
-s.bind(('localhost',8000))
-s.listen(5)
-c,addr=s.accept()
-while True:
- i=input("Enter a data: ")
- c.send(i.encode())
- ack=c.recv(1024).decode()
- if ack:
-   print(ack)
-   continue
- else:
-   c.close()
-   break
+import time
+
+def send_frame(frame):
+    print(f"Sending frame: {frame}")
+    time.sleep(1)  # Simulating transmission time
+    return True
+
+def receive_ack():
+    time.sleep(1)  # Simulating transmission time
+    return True
+
+def stop_and_wait_protocol(frame_size):
+    for frame_number in range(frame_size):
+        frame = f"Frame {frame_number}"
+        while not send_frame(frame):
+            print("Timeout occurred. Resending frame.")
+        print(f"Frame {frame_number} sent successfully.")
+
+        ack_received = receive_ack()
+        while not ack_received:
+            print("Timeout occurred. Resending frame.")
+            ack_received = receive_ack()
+
+        print(f"Acknowledgment received for Frame {frame_number}.\n")
+
+    print("Data transmission completed.")
+
+if __name__ == "__main__":
+    frame_size = int(input("Enter the frame size: "))
+    stop_and_wait_protocol(frame_size)
 ```
 ## OUTPUT
+
+![Screenshot 2024-02-27 192920](https://github.com/Srikaavyaathamizh/2a_Stop_and_Wait_Protocol/assets/144870938/be7cd94f-a4db-48f4-90ed-428995b670ee)
+
 ## RESULT
 Thus, python program to perform stop and wait protocol was successfully executed.
